@@ -77,8 +77,9 @@
 (defn reset-all!
   ([] (reset-all! (om/root-cursor app-state)))
   ([st]
-   (reset-game! st)
-   (reset-planets! st)))
+   (om/transact! st
+                 #(do
+                    initial-app-state))))
 
 #_(reset-game!)
 #_(reset-planets!)
@@ -243,7 +244,7 @@
   (reify
     om/IRender
     (render [_]
-      (let [passed-time (update-time! owner)
+      (let [passed-time (update-time! owner) ;; this triggers rerender
             data (assoc-in data [:universe :time] passed-time)]
         (when (<= (get-in data [:rocket :y]) 10)
           (score-transitions data))
