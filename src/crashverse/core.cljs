@@ -43,32 +43,42 @@
                     :color "yellow"
                     :width 40 }])
 
-(defonce app-state (atom {:universe { :width 500
-                                      :height 500
-                                     :start-time (time-now)}
-                          :rocket {:x 250
-                                   :y 470
-                                   :width 20}
-                          :planets init-planets}))
+(def initial-app-state {:universe { :width 500
+                                   :height 500
+                                   :start-time (time-now)}
+                        :rocket {:x 250
+                                 :y 470
+                                 :width 20}
+                        :planets init-planets})
 
-(defn reset-planets! []
-  (swap! app-state assoc :planets init-planets))
+(defonce app-state (atom initial-app-state))
 
-(defn remove-planets! []
-  (swap! app-state assoc :planets []))
+(defn reset-planets!
+  ([] (reset-planets! (om/root-cursor app-state)))
+  ([st]
+   (om/transact! st :planets #(do init-planets))))
 
-(defn add-planet! [pl]
-  (swap! app-state update-in [:planets] conj pl))
+(defn remove-planets!
+  ([] (remove-planets! (om/root-cursor app-state)))
+  ([st]
+   (om/transact! st :planets #(do []))))
 
-(defn reset-game! []
-  (swap! app-state assoc
-         :rocket {:x 250
-                  :y 476
-                  :width 20}))
+#_(defn add-planet! [pl]
+    (swap! app-state update-in [:planets] conj pl))
 
-(defn reset-all! []
-    (reset-game!)
-    (reset-planets!))
+(defn reset-game!
+  ([] (reset-game! (om/root-cursor app-state)))
+  ([st]
+   (om/transact! st :rocket #(do
+                               {:x 250
+                                :y 476
+                                :width 20}))))
+
+(defn reset-all!
+  ([] (reset-all! (om/root-cursor app-state)))
+  ([st]
+   (reset-game! st)
+   (reset-planets! st)))
 
 #_(reset-game!)
 #_(reset-planets!)
@@ -122,8 +132,6 @@
                         theta p-data)))
   ;; theta =  speed * time
   )
-
-
 
 (defn planet [u-data p-data]
   ;; DEBUGGING
@@ -200,19 +208,23 @@
 
 #_(reset-game!)
 
-(defn collision-transitions []
-  (when-not (-> @app-state :rocket :state :explosion)
-    (go
-      (swap! app-state assoc-in [:rocket :state :explosion] (time-now))
-      (<! (timeout 1000))
-      (reset-game!))))
+(defn transer! [st]
+  (go
+    (om/transact! st :kkey  #(inc %))))
 
-(defn score-transitions []
-  (when-not (-> @app-state :rocket :state :score)
+(defn collision-transitions [st]
+  (when-not (-> st :rocket :state :explosion)
     (go
-      (swap! app-state assoc-in [:rocket :state :score] (time-now))
+      (om/transact! st [:rocket :state :explosion] (fn [_] (time-now)))
       (<! (timeout 1000))
-      (reset-game!))))
+      (reset-game! st))))
+
+(defn score-transitions [st]
+  (when-not (-> st :rocket :state :score)
+    (go
+      (om/transact! st [:rocket :state :score] (fn [_] (time-now)))
+      (<! (timeout 1000))
+      (reset-game! st))))
 
 (defn get-start-time! [owner]
   (if-let [start-time (om/get-state owner :start-time)]
@@ -234,9 +246,9 @@
       (let [passed-time (update-time! owner)
             data (assoc-in data [:universe :time] passed-time)]
         (when (<= (get-in data [:rocket :y]) 10)
-          (score-transitions))
+          (score-transitions data))
         (when (collision data)
-          (collision-transitions))
+          (collision-transitions data))
         (sab/html [:div.board {:onClick (fn [] (move (:rocket data)))} 
                    (render-planets data)
                    (render-rocket (:rocket data))])))))
