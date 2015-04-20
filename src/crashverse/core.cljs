@@ -89,29 +89,12 @@
 
 #_(prn @app-state)
 
+#_(prn (center {:width 300 :height 200 }))
+
 #_(remove-planets!)
 
 #_(reset-planets!)
 ;; edit some planet properties
-
-
-;; live coding macros
-
-(logmaster "hay" #_@app-state)
-
-#_(defn)
-
-#_(this is cool)
-
-;; SHOW second browser
-;; BROADCAST
-
-#_(remove-planets!)
-
-#_(reset-planets!)
-
-;; Multiple builds
-
 
 
 (defn universe-position [u-data {:keys [x y] :as point}]
@@ -141,12 +124,32 @@
   )
 
 (defn planet [u-data p-data]
+  ;; DEBUGGING
+  #_(prn p-data)
   (let [{:keys [x-verse y-verse]} (planet-position u-data p-data)]
     (sab/html [:div.planet {:style { :top (str y-verse "px")
                                      :left (str x-verse "px")
                                      :background-color (:color p-data)
                                      :width (str (:width p-data) "px")
                                      :height (str (:width p-data) "px")}}])))
+
+;; live coding macros
+
+(logmaster "hay" #_@app-state)
+
+#_(defn)
+
+#_(this is cool)
+
+;; SHOW second browser
+;; BROADCAST
+
+#_(remove-planets!)
+
+#_(reset-planets!)
+
+;; Multiple builds
+
 
 (defn universe-time [u-data]
   (- (time-now) (:start-time u-data)))
@@ -179,8 +182,6 @@
                  [:div.capsule]
                  [:img.rocker {:src "rocket.gif"}]]))))
 
-
-
 (defn rand-offset [n]
   (- (round (* n (js/Math.random))) (round (/ n 2))))
 
@@ -193,8 +194,6 @@
 #_(prn (rand-offset 100))
 
 (defn move [r-data]
-  (prn r-data)
-  (prn "here")
   (om/transact! r-data move-it))
 
 #_(reset-game!)
@@ -217,7 +216,8 @@
   (reify
     om/IRender
     (render [_]
-      (let [data (assoc-in data [:universe :time]
+      (let [
+            data (assoc-in data [:universe :time]
                            (universe-time (:universe data)))]
         (when (<= (get-in data [:rocket :y]) 0)
           (score-transitions))
@@ -235,10 +235,4 @@
    app-state
    {:target (. js/document (getElementById "app"))}))
 
-
-
-
-
-
-
-
+#_(main)
