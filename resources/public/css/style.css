@@ -1,0 +1,47 @@
+/* some style */
+.board {
+    width: 500px;
+    height: 500px;
+    background-color: black;
+    position: relative;
+    overflow: hidden;
+}
+
+.planet {
+    position: absolute;
+    border-radius: 50%;
+    z-index: 5;
+}
+
+.rocket {
+    position: absolute;
+    width: 180px;
+    height: 135px;
+    z-index: 2;
+    background-color: black;
+    -webkit-transition: all 0.2s;
+}
+
+.capsule {
+    position: absolute;
+    top: 62px;
+    left: 85px;
+    width: 10px;
+    height: 10px;
+    background-color: white;
+}
+
+.rocker {
+    position: absolute;
+    top: 55px;
+    left: 82px;
+}
+
+.explosion {
+    width: 180px;
+    height: 135px;
+    z-index: 2;
+    background-image: url("/explosion.gif")
+}
+
+
