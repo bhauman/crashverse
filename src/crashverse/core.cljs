@@ -123,9 +123,12 @@
   ;; theta =  speed * time
   )
 
+
+
 (defn planet [u-data p-data]
   ;; DEBUGGING
   #_(prn p-data)
+  #_(prn u-data)
   (let [{:keys [x-verse y-verse]} (planet-position u-data p-data)]
     (sab/html [:div.planet {:style { :top (str y-verse "px")
                                      :left (str x-verse "px")
@@ -174,8 +177,7 @@
   (let [{:keys [x y]} r-data]
     (if (:explosion (:state r-data))
       (sab/html [:div.rocket.explosion {:style { :top (- y 62)
-                                                 :left (- x 85)}
-                                        }
+                                                 :left (- x 85)}}
                  [:img {:src (str "explosion.gif?x=" (:explosion (:state r-data)))}]])
       (sab/html [:div.rocket {:style {:top (- y 62)
                                       :left (- x 85)}}
@@ -239,12 +241,10 @@
                    (render-planets data)
                    (render-rocket (:rocket data))])))))
 
-
 (defn main []
   (om/root
    #'game-board
    app-state
    {:target (. js/document (getElementById "app"))}))
 
-
-(main)
+#_(main)
