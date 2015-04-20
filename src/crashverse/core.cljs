@@ -212,27 +212,39 @@
       (<! (timeout 1000))
       (reset-game!))))
 
+(defn get-start-time! [owner]
+  (if-let [start-time (om/get-state owner :start-time)]
+    start-time
+    (let [cur-time (time-now)]
+      (om/set-state! owner :start-time cur-time)
+      cur-time)))
+
+(defn update-time! [owner]
+  (let [start (get-start-time! owner)]
+    (let [passed (- (time-now) start)]
+      (om/set-state! owner :current-time passed)
+      passed)))
+
 (defn game-board [data owner]
   (reify
     om/IRender
     (render [_]
-      (let [
-            data (assoc-in data [:universe :time]
-                           (universe-time (:universe data)))]
-        (when (<= (get-in data [:rocket :y]) 0)
+      (let [passed-time (update-time! owner)
+            data (assoc-in data [:universe :time] passed-time)]
+        (when (<= (get-in data [:rocket :y]) 10)
           (score-transitions))
         (when (collision data)
-          (prn "Collison")
           (collision-transitions))
-        (om/refresh! owner)
         (sab/html [:div.board {:onClick (fn [] (move (:rocket data)))} 
                    (render-planets data)
                    (render-rocket (:rocket data))])))))
 
+
 (defn main []
   (om/root
-   game-board
+   #'game-board
    app-state
    {:target (. js/document (getElementById "app"))}))
 
-#_(main)
+
+(main)
