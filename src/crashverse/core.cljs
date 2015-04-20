@@ -139,11 +139,12 @@
   #_(prn p-data)
   #_(prn u-data)
   (let [{:keys [x-verse y-verse]} (planet-position u-data p-data)]
-    (sab/html [:div.planet {:style { :top (str y-verse "px")
-                                     :left (str x-verse "px")
-                                     :background-color (:color p-data)
-                                     :width (str (:width p-data) "px")
-                                     :height (str (:width p-data) "px")}}])))
+    (sab/html [:div.planet
+               {:style { :top (str y-verse "px")
+                        :left (str x-verse "px")
+                        :background-color (:color p-data)
+                        :width (str (:width p-data) "px")
+                        :height (str (:width p-data) "px")}}])))
 
 ;; live coding macros
 
