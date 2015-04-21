@@ -90,8 +90,6 @@
 
 (def round js/Math.round)
 
-
-
 ;; rotation
 ;; x' = x \cos \theta - y \sin \theta\,,
 ;; y' = x \sin \theta + y \cos \theta\,.
@@ -166,6 +164,7 @@
 
 ;; Multiple builds
 
+;; repl interaction
 
 (defn universe-time [u-data]
   (- (time-now) (:start-time u-data)))

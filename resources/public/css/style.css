@@ -1,10 +1,15 @@
 /* some style */
+body {
+  background-color: rgb(24,26,38);    
+}
+
 .board {
     width: 500px;
     height: 500px;
     background-color: black;
     position: relative;
     overflow: hidden;
+    margin: auto;
 }
 
 .planet {
@@ -44,4 +49,8 @@
     background-image: url("/explosion.gif")
 }
 
-
+@media (max-width: 600px) {
+  #app > .board {
+      zoom: 0.7;
+  }
+}
