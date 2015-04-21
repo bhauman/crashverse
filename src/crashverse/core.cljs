@@ -82,15 +82,15 @@
                     initial-app-state))))
 
 #_(reset-game!)
+
 #_(reset-planets!)
+
 #_(reset-all!)
 #_(remove-planets!)
 
 (def round js/Math.round)
 
-(defn center [{:keys [width height]}]
-  {:x (round (/ width 2))
-   :y (round (/ height 2)) })
+
 
 ;; rotation
 ;; x' = x \cos \theta - y \sin \theta\,,
@@ -100,13 +100,16 @@
 
 #_(prn @app-state)
 
+(defn center [{:keys [width height]}]
+  {:x (round (/ width 2))
+   :y (round (/ height 2)) })
+
 #_(prn (center {:width 300 :height 200 }))
 
 #_(remove-planets!)
 
 #_(reset-planets!)
 ;; edit some planet properties
-
 
 (defn universe-position [u-data {:keys [x y] :as point}]
   (let [center-p (center u-data)
@@ -251,7 +254,7 @@
           (score-transitions data))
         (when (collision data)
           (collision-transitions data))
-        (sab/html [:div.board {:onClick (fn [] (move (:rocket data)))} 
+        (sab/html [:div.board {:onClick #(move (:rocket data))} 
                    (render-planets data)
                    (render-rocket (:rocket data))])))))
 
