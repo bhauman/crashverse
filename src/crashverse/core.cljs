@@ -166,6 +166,8 @@
 
 ;; Multiple builds
 
+;; testing tab
+
 ;; repl interaction
 
 (defn universe-time [u-data]
@@ -175,9 +177,9 @@
   (let [{:keys [x-verse y-verse width]}
         (planet-position (:universe data) planet)
         {:keys [x y]} (:rocket data)
-        offset (+ 5 (/ width 2))]
-    (and (> (+ x-verse offset) x (- x-verse offset))
-         (> (+ y-verse offset) y (- y-verse offset)))))
+        offset (+ 5 width)]
+    (and (< x-verse (+ x 5) (+ x-verse offset))
+         (< y-verse (+ y 5) (+ y-verse offset)))))
 
 (defn collision [data]
   (some (partial planet-collision data)
