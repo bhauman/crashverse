@@ -46,6 +46,7 @@
                          :optimizations :advanced
                          :pretty-print false}}]}
 
+  :aliases {"test" ["cljsbuild" "test"]}
   :figwheel {
              :http-server-root "public" ;; default and assumes "resources" 
              :server-port 4449 ;; default
