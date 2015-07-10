@@ -38,7 +38,8 @@
                          :asset-path "js/test/out"
                          :source-map true
                          ;; :source-map-timestamp true
-                         :cache-analysis true }}
+                         :cache-analysis true
+                         :recompile-dependents true}}
              {:id "min"
               :source-paths ["src"]
               :compiler {:output-to "resources/public/js/compiled/crashverse.js"
